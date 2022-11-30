@@ -1,4 +1,5 @@
-/// a parser which contains a pattern where it matches strings against delimiter "{}"
+/// a parser which contains a pattern for which it pattern matches strings.
+/// Not yet added proper type conversion
 pub struct Parser<'a> {
     pattern: Vec<&'a str>,
 }
@@ -20,7 +21,7 @@ impl<'a> Parser<'a> {
 
             // If one of the delimiters in the middle are empty
             if p.is_empty() && pi != 0 {
-                return Err("Invalid pattern");
+                return Err("Invalid pattern in the middle of pattern match (\"\")");
 
             // If the last element should be pattern matched, add remainder of line
             } else if pi == self.pattern.len()-2 && self.pattern[pi+1].is_empty() {
@@ -30,7 +31,9 @@ impl<'a> Parser<'a> {
                 // Find index where next delimiter starts (i2)
                 i2 = i + p.len() + line[i+p.len()..].find(self.pattern[pi+1])
                     .expect("No such pattern in input");
+                // Add the slice in between the indices to the result
                 res.push(&line[i+p.len()..i2]);
+                // increment the lower index
                 i = i2;
             }
         }
