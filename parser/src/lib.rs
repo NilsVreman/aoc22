@@ -1,3 +1,6 @@
+use std::fs;
+use std::io;
+
 /// a parser which contains a pattern for which it pattern matches strings.
 /// Not yet added proper type conversion
 pub struct Parser<'a> {
@@ -39,5 +42,22 @@ impl<'a> Parser<'a> {
         }
 
         Ok(res)
+    }
+}
+
+pub struct Content {
+    pub content: String,
+}
+
+impl Content {
+    pub fn read_file(file_name: &str) -> Result<Content, io::Error> {
+        match fs::read_to_string(file_name) {
+            Ok(s) => Ok( Content { content: s} ),
+            Err(e) => Err(e),
+        }
+    }
+
+    pub fn read(content: &str) -> Content {
+        Content { content: content.to_string() }
     }
 }

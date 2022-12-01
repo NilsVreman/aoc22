@@ -12,7 +12,7 @@ pub fn main() {
 
 #[cfg(test)]
 mod tests {
-    use parser::Parser;
+    use parser::{Parser, Content};
 
     //#[test]
     //fn randomstring1_test() {
@@ -92,5 +92,19 @@ mod tests {
 
         let input = "2x3x4";
         assert_eq!(ps.parse(&input).unwrap(), &["2", "3", "4"])
+    }
+
+    #[test]
+    fn content1_test() {
+        let file_name = "test.txt";
+        let c = Content::read_file(&file_name).unwrap_or( Content{ content: "".to_string() } );
+        let res = "here we go again
+with a bunch of lines
+and some data
+like 1x2x3
+newline
+...and done
+";
+        assert_eq!(&c.content[..], res)
     }
 }
