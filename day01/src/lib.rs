@@ -18,15 +18,16 @@ pub fn create_elf_list(c: &parser::Content) -> Vec<Elf> {
     loop {
         let mut bag: Vec<i32> = Vec::new();
 
-        while i < lines.len() && !lines[i].is_empty() {
-            bag.push(lines[i].parse::<i32>().unwrap());
+        while i < lines.len()
+            && !lines[i].is_empty() {
+            bag.push(lines[i]
+                     .parse::<i32>()
+                     .unwrap());
             i += 1;
         }
 
         res.push( Elf { bag } );
-
         i += 1;
-
         if i >= lines.len() { break; }
     }
 
