@@ -10,7 +10,7 @@ impl Elf {
     }
 }
 
-pub fn create_elf_list(c: parser::Content) -> Vec<Elf> {
+pub fn create_elf_list(c: &parser::Content) -> Vec<Elf> {
     let mut res: Vec<Elf> = Vec::new();
     let lines: Vec<&str> = c.content.lines().collect();
     let mut i: usize = 0;

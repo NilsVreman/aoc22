@@ -3,7 +3,7 @@ use parser;
 
 pub fn main() {
     let elfs = parser::Content::read_file(&"input.txt").unwrap(); // it should panic if this doesn't work
-    let elf_list = day1::create_elf_list(elfs);
+    let elf_list = day1::create_elf_list(&elfs);
     let melf = day1::max_elf(&elf_list, 1);
     println!("maximum: {}", melf);
     let m3elf = day1::max_elf(&elf_list, 3);
@@ -13,6 +13,7 @@ pub fn main() {
 #[cfg(test)]
 mod tests {
     use day1;
+    use parser::Content;
 
     //#[test]
     //fn elf_list_test() {
@@ -46,15 +47,15 @@ mod tests {
     //}
     #[test]
     fn elf_sum_test() {
-        let elfs = "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000";
-        let elf_list = day1::create_elf_list(elfs.to_string());
+        let elfs = Content::read("1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000");
+        let elf_list = day1::create_elf_list(&elfs);
         let melf = day1::max_elf(&elf_list, 1);
         assert_eq!(melf, 24000)
     }
     #[test]
     fn elf_sum3_test() {
-        let elfs = "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000";
-        let elf_list = day1::create_elf_list(elfs.to_string());
+        let elfs = Content::read("1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000");
+        let elf_list = day1::create_elf_list(&elfs);
         let melf = day1::max_elf(&elf_list, 3);
         assert_eq!(melf, 45000)
     }
