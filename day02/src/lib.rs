@@ -1,27 +1,16 @@
 enum Shape {
-    R,
-    P,
-    S,
+    R = 1,
+    P = 2,
+    S = 3,
 }
 
 enum Outcome {
-    L,
-    W,
-    D,
-}
-
-impl Outcome {
-    pub fn value(&self) -> u32 {
-        match self {
-            Outcome::L => 0,
-            Outcome::W => 6,
-            Outcome::D => 3,
-        }
-    }
+    L = 0,
+    W = 6,
+    D = 3,
 }
 
 impl Shape {
-
     pub fn build(s: &str) -> Shape {
         match s {
             "A" | "X" => Shape::R,
@@ -40,24 +29,17 @@ impl Shape {
         }
     }
 
-    pub fn value(&self) -> u32 {
-        match self {
-            Shape::R => 1,
-            Shape::P => 2,
-            Shape::S => 3,
-        }
-    }
-
     pub fn game(&self, other: &Shape) -> Outcome {
         match (self, other) {
             (Shape::R, Shape::R) | (Shape::P, Shape::P) | (Shape::S, Shape::S) => Outcome::D,
             (Shape::R, Shape::S) | (Shape::P, Shape::R) | (Shape::S, Shape::P) => Outcome::W,
             (Shape::R, Shape::P) | (Shape::P, Shape::S) | (Shape::S, Shape::R) => Outcome::L,
+            _ => panic!("Don't know why this would ever happen")
         }
     }
 
     pub fn points(&self, other: &Shape) -> u32 {
-        self.game(&other).value() + self.value()
+        self.game(&other) as u32 + *self as u32
     }
 }
 
