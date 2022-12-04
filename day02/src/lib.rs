@@ -34,7 +34,6 @@ impl Shape {
             (Shape::R, Shape::R) | (Shape::P, Shape::P) | (Shape::S, Shape::S) => Outcome::D,
             (Shape::R, Shape::S) | (Shape::P, Shape::R) | (Shape::S, Shape::P) => Outcome::W,
             (Shape::R, Shape::P) | (Shape::P, Shape::S) | (Shape::S, Shape::R) => Outcome::L,
-            _ => panic!("Don't know why this would ever happen")
         }
     }
 
