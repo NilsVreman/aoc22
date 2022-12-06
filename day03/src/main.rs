@@ -2,11 +2,17 @@ use parser;
 
 pub fn main() {
     let c = parser::Content::read_file(&"input.txt").expect("No such file found");
-    let res = day03::rucksacks(&c)
-        .iter()
+    let r = day03::rucksacks(&c);
+    let res = r.iter()
         .map(|x| x.find_common())
         .sum::<u32>();
     println!("Priority: {}", res);
+
+    let mut res2: u32 = 0;
+    for i in (0..r.len()-2).step_by(3) {
+        res2 += day03::find_common_group(&r[i..i+3]);
+    }
+    println!("Priority: {}", res2);
 }
 
 #[cfg(test)]
@@ -118,6 +124,23 @@ wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw");
         let res = day03::rucksacks(&input);
+        assert_eq!(res.iter().map(|x| x.find_common()).sum::<u32>(), 157);
+    }
+
+    #[test]
+    fn t10_test() {
+        let input = parser::Content::read(&"vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw");
+        let res = day03::rucksacks(&input);
+        let mut res2: u32 = 0;
+        for i in (0..res.len()-2).step_by(3) {
+            res2 += day03::find_common_group(&res[i..i+3]);
+            println!("Priority: {}", res2);
+        }
         assert_eq!(res.iter().map(|x| x.find_common()).sum::<u32>(), 157);
     }
 }
