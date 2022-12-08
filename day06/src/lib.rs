@@ -2,7 +2,7 @@ use parser;
 
 fn unique(s: &str) -> bool {
     match s.chars().enumerate().find_map(|(i, c)| {
-        s.chars()
+            s.chars()
             .skip(i + 1)
             .find(|other| c == *other)
     }) {
