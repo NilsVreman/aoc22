@@ -1,10 +1,14 @@
 use parser;
 
 pub fn main() {
+    const TAIL_LEN_A: usize = 1;
+    const TAIL_LEN_B: usize = 9;
+
     let c = parser::Content::read_file(&"input.txt").expect("No input file provided");
     let v = day09::Command::command_list(&c);
-    println!("Part a: {}", day09::execute_command_list(&v).iter().count());
 
+    println!("Part a: {}", day09::execute_command_list::<TAIL_LEN_A>(&v));
+    println!("Part b: {}", day09::execute_command_list::<TAIL_LEN_B>(&v));
 }
 
 #[cfg(test)]
@@ -48,6 +52,7 @@ R 2");
 
     #[test]
     fn t3_test() {
+        const TAIL_LEN: usize = 1;
         let c = parser::Content::read(&"R 4
 U 4
 L 3
@@ -57,6 +62,36 @@ D 1
 L 5
 R 2");
         let v = day09::Command::command_list(&c);
-        assert_eq!(day09::execute_command_list(&v).iter().count(), 13);
+        assert_eq!(day09::execute_command_list::<TAIL_LEN>(&v), 13);
+    }
+
+    #[test]
+    fn t4_test() {
+        const TAIL_LEN: usize = 9;
+        let c = parser::Content::read(&"R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2");
+        let v = day09::Command::command_list(&c);
+        assert_eq!(day09::execute_command_list::<TAIL_LEN>(&v), 1);
+    }
+
+    #[test]
+    fn t5_test() {
+        const TAIL_LEN: usize = 9;
+        let c = parser::Content::read(&"R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20");
+        let v = day09::Command::command_list(&c);
+        assert_eq!(day09::execute_command_list::<TAIL_LEN>(&v), 36);
     }
 }

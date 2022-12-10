@@ -1,11 +1,9 @@
 use parser;
+use std::collections::HashMap;
 
-pub struct Head {
-    x: i32,
-    y: i32,
-}
-
-pub struct Tail {
+#[derive(Copy)]
+#[derive(Clone)]
+pub struct Node {
     x: i32,
     y: i32,
 }
@@ -38,9 +36,9 @@ impl Command {
     }
 }
 
-impl Head {
-    pub fn new() -> Head {
-        Head { x: 0, y: 0 }
+impl Node {
+    pub fn new() -> Node {
+        Node { x: 0, y: 0 }
     }
 
     pub fn execute(&mut self, cmd: &Command) {
@@ -51,23 +49,17 @@ impl Head {
             Command::U => self.y += 1,
         };
     }
-}
 
-impl Tail {
-    pub fn new() -> Tail {
-        Tail { x: 0, y: 0 }
-    }
-
-    fn dist(&self, h: &Head) -> (i32, i32) {
+    fn dist(&self, h: &Node) -> (i32, i32) {
         (h.x - self.x, h.y - self.y)
     }
 
-    pub fn is_close(&self, h: &Head) -> bool {
+    pub fn is_close(&self, h: &Node) -> bool {
         let d = self.dist(&h);
         d.0.abs() <= 1 && d.1.abs() <= 1
     }
 
-    pub fn follow(&mut self, h: &Head) {
+    pub fn follow(&mut self, h: &Node) {
         if !self.is_close(h) {
             let d = self.dist(&h);
             if let 1 | 2 | -1 | -2 = d.0 {
@@ -80,24 +72,20 @@ impl Tail {
     }
 }
 
-pub fn execute_command_list(list: &Vec<Command>) -> Vec<(i32, i32)> {
-    let mut h = Head::new();
-    let mut t = Tail::new();
-    let mut res: Vec<(i32, i32)> = Vec::new();
-    res.push((t.x, t.y));
+pub fn execute_command_list<const TAIL_LEN: usize>(list: &Vec<Command>) -> usize {
+    let mut head = Node::new();
+    let mut tail = [Node::new(); TAIL_LEN];
+    let mut res: HashMap<(i32, i32), bool> = HashMap::new();
+    res.insert((tail[TAIL_LEN-1].x, tail[TAIL_LEN-1].y), true);
 
     for cmd in list {
-        h.execute(&cmd);
-        t.follow(&h);
-        res.push((t.x, t.y));
+        head.execute(&cmd);
+        tail[0].follow(&head);
+        for i in 1..TAIL_LEN {
+            tail[i].follow(&tail[i-1].clone());
+        }
+        res.insert((tail[TAIL_LEN-1].x, tail[TAIL_LEN-1].y), true);
     }
 
-    res.iter()
-        .enumerate()
-        .filter(|(i, x)| res.iter()
-                .skip(i+1)
-                .find(|y| x == y)
-                .is_none())
-        .map(|(_, &x)| x)
-        .collect()
+    res.into_keys().count()
 }
