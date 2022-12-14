@@ -1,8 +1,11 @@
 use parser;
 use day13::{Packet};
 
+const PATH: &str = "data";
+const FILENAME: &str = "day13";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("No input file found!");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
 
     println!("Part A: {}", c.content.split("\n\n")
              .map(|pair| {

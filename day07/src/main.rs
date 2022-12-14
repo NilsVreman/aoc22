@@ -1,7 +1,10 @@
 use parser;
 
+const PATH: &str = "data";
+const FILENAME: &str = "day07";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("Couldn't find input file");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let root = day07::build_tree(&c);
     let mut res: Vec<u32> = Vec::new();
     day07::size_list(&root, &mut res);

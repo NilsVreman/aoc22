@@ -1,7 +1,10 @@
 use parser;
 
+const PATH: &str = "data";
+const FILENAME: &str = "day03";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("No such file found");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let r = day03::rucksacks(&c);
     let res = r.iter()
         .map(|x| x.find_common())
@@ -19,29 +22,6 @@ pub fn main() {
 mod tests {
     use day03;
 
-//    #[test]
-//    fn t1_test() {
-//        let input = parser::Content::read(&"vJrwpWtwJgWrhcsFMMfFFhFp
-//jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-//PmmdzqPrVvPwwTWBwg
-//wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-//ttgJtRGJQctTZtZT
-//CrZsJsPPZsGzwwsLwLmpwMDw");
-//        let res = day03::rucksacks(&input);
-//        assert_eq!(res[0].c1, "vJrwpWtwJgWr")
-//    }
-//
-//    #[test]
-//    fn t2_test() {
-//        let input = parser::Content::read(&"vJrwpWtwJgWrhcsFMMfFFhFp
-//jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-//PmmdzqPrVvPwwTWBwg
-//wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-//ttgJtRGJQctTZtZT
-//CrZsJsPPZsGzwwsLwLmpwMDw");
-//        let res = day03::rucksacks(&input);
-//        assert_eq!(res[0].c2, "hcsFMMfFFhFp")
-//    }
 
     #[test]
     fn t3_test() {

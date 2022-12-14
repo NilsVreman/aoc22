@@ -1,7 +1,10 @@
 use parser;
 
+const PATH: &str = "data";
+const FILENAME: &str = "day06";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("Couldn't find file");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     println!("marker position: {}", day06::find_marker(&c));
     println!("message marker position: {}", day06::find_msg_marker(&c));
 }

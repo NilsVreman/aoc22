@@ -1,7 +1,10 @@
 use parser;
 
+const PATH: &str = "data";
+const FILENAME: &str = "day05";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("No such file found");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let strings = c.content.split("\n\n").collect::<Vec<&str>>();
 
     let mut stacks = day05::Stacks::build(&strings[0]);

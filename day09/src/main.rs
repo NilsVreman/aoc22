@@ -1,10 +1,12 @@
 use parser;
 
-pub fn main() {
-    const TAIL_LEN_A: usize = 1;
-    const TAIL_LEN_B: usize = 9;
+const PATH: &str = "data";
+const FILENAME: &str = "day09";
+const TAIL_LEN_A: usize = 1;
+const TAIL_LEN_B: usize = 9;
 
-    let c = parser::Content::read_file(&"input.txt").expect("No input file provided");
+pub fn main() {
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let v = day09::Command::command_list(&c);
 
     println!("Part a: {}", day09::execute_command_list::<TAIL_LEN_A>(&v));

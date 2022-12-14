@@ -50,9 +50,9 @@ pub struct Content {
 }
 
 impl Content {
-    pub fn read_file(file_name: &str) -> Result<Content, io::Error> {
-        match fs::read_to_string(file_name) {
-            Ok(s) => Ok( Content { content: s} ),
+    pub fn read_file(path: &str, file_name: &str) -> Result<Content, io::Error> {
+        match fs::read_to_string(format!("{path}/{file_name}.txt")) {
+            Ok(s) => Ok( Content { content: s } ),
             Err(e) => Err(e),
         }
     }

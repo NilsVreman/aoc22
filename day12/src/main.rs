@@ -1,7 +1,10 @@
 use parser;
 
+const PATH: &str = "data";
+const FILENAME: &str = "day12";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("No input file found!");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let g = day12::Grid::new(&c);
     println!("Part a: {}", g.shortest_path()[g.start.0][g.start.1]);
     println!("Part b: {}", g.shortest_scenic_path());

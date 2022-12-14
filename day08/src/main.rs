@@ -1,7 +1,10 @@
 use parser;
 
+const PATH: &str = "data";
+const FILENAME: &str = "day08";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("Input file not found!");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let forest = day08::Forest::new(&c);
     println!("Part a: {}", forest.nbr_visible());
     //println!("Part b: {}", forest.best_view_from_tree());

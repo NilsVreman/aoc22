@@ -1,7 +1,10 @@
 use parser;
 
+const PATH: &str = "data";
+const FILENAME: &str = "day02";
+
 pub fn main() {
-    let c = parser::Content::read_file(&"input.txt").expect("No such file found");
+    let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let ps = parser::Parser::build("{} {}", "{}");
     let res: u32 = c.content
         .lines()
