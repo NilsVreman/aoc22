@@ -5,8 +5,8 @@ const FILENAME: &str = "day06";
 
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
-    println!("marker position: {}", day06::find_marker(&c));
-    println!("message marker position: {}", day06::find_msg_marker(&c));
+    //println!("Part A: {}", day06::find_marker(&c));
+    //println!("Part B: {}", day06::find_msg_marker(&c));
 }
 
 #[cfg(test)]

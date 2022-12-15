@@ -6,8 +6,10 @@ const FILENAME: &str = "day15";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let list = day15::new_list(&c);
-    println!("Part A: {}", day15::cant_contain_beacon(&list, 2000000));
-    println!("Part B: {}", day15::can_contain_beacon(&list, 4000000));
+    let resA = day15::cant_contain_beacon(&list, 2000000);
+    //println!("Part A: {}", resA);
+    let resB = day15::can_contain_beacon(&list, 4000000);
+    //println!("Part B: {}", resB);
 }
 
 #[cfg(test)]

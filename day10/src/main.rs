@@ -10,11 +10,11 @@ pub fn main() {
     let l = day10::Instr::instr_list(&c);
     let v = day10::register_list(&l);
     let s = day10::signal_str_at(&v, &d);
+    //println!("Part A: {}", s.iter().sum::<i32>());
 
-    println!("Part A: {}", s.iter().sum::<i32>());
     let p = day10::pixels(&v, 40, 6);
-    println!("Part B:");
-    p.iter().for_each(|x| println!("{}", String::from_iter(x)));
+    //println!("Part B:");
+    //p.iter().for_each(|x| println!("{}", String::from_iter(x)));
 }
 
 #[cfg(test)]

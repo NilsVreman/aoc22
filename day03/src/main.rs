@@ -9,13 +9,13 @@ pub fn main() {
     let res = r.iter()
         .map(|x| x.find_common())
         .sum::<u32>();
-    println!("Priority: {}", res);
+    //println!("Part A: {}", res);
 
     let mut res2: u32 = 0;
     for i in (0..r.len()-2).step_by(3) {
         res2 += day03::find_common_group(&r[i..i+3]);
     }
-    println!("Priority: {}", res2);
+    //println!("Part B: {}", res2);
 }
 
 #[cfg(test)]

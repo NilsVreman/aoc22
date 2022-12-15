@@ -7,9 +7,9 @@ pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let res = day04::pairs_vec(&c);
     let fco: u32 = res.iter().map(|x| if x.fully_contains_other() { 1 } else { 0 }).sum();
-    println!("fully_contains: {}", fco);
+    //println!("Part A: {}", fco);
     let co: u32 = res.iter().map(|x| if x.contains_other() { 1 } else { 0 }).sum();
-    println!("contains: {}", co);
+    //println!("Part B: {}", co);
 }
 
 #[cfg(test)]

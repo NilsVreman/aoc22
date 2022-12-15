@@ -7,7 +7,7 @@ const FILENAME: &str = "day13";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
 
-    println!("Part A: {}", c.content.split("\n\n")
+    let res = c.content.split("\n\n")
              .map(|pair| {
                  let mut itr = pair.lines();
                  let a = Packet::build(itr.next().unwrap());
@@ -16,7 +16,8 @@ pub fn main() {
             }).enumerate()
             .filter(|(_, (a, b))| a < b)
             .map(|(i, _)| i + 1)
-            .sum::<usize>());
+            .sum::<usize>();
+    //println!("Part A: {}", res);
     
     let divider1 = Packet::List(vec![Packet::List(vec![Packet::Int(2)])]);
     let divider2 = Packet::List(vec![Packet::List(vec![Packet::Int(6)])]);
@@ -30,5 +31,5 @@ pub fn main() {
     let idx1 = packets.iter().filter(|&packet| packet < &divider1).count();
     let idx2 = packets.iter().filter(|&packet| packet < &divider2).count();
 
-    println!("Part B: {}", (idx1+1)*(idx2+2));
+    //println!("Part B: {}", (idx1+1)*(idx2+2));
 }

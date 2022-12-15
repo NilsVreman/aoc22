@@ -9,8 +9,8 @@ pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let v = day09::Command::command_list(&c);
 
-    println!("Part a: {}", day09::execute_command_list::<TAIL_LEN_A>(&v));
-    println!("Part b: {}", day09::execute_command_list::<TAIL_LEN_B>(&v));
+    //println!("Part A: {}", day09::execute_command_list::<TAIL_LEN_A>(&v));
+    //println!("Part B: {}", day09::execute_command_list::<TAIL_LEN_B>(&v));
 }
 
 #[cfg(test)]

@@ -8,9 +8,9 @@ pub fn main() {
     let root = day07::build_tree(&c);
     let mut res: Vec<u32> = Vec::new();
     day07::size_list(&root, &mut res);
-    println!("part a: {:?}", day07::sum_below_x(&res, 100_000));
+    //println!("Part A: {:?}", day07::sum_below_x(&res, 100_000));
 
-    println!("part b: {}", day07::size_of_dir_to_remove(&res, 70_000_000, 30_000_000));
+    //println!("Part B: {}", day07::size_of_dir_to_remove(&res, 70_000_000, 30_000_000));
 
 }
 

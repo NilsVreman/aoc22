@@ -8,15 +8,15 @@ pub fn main() {
     let strings = c.content.split("\n\n").collect::<Vec<&str>>();
 
     let mut stacks = day05::Stacks::build(&strings[0]);
-    println!("{}", stacks.top_layer());
+    //println!("{}", stacks.top_layer());
     let cmds = day05::CargoMove::build_move_stack(&strings[1]);
     stacks.execute_9000(&cmds);
-    println!("{}", stacks.top_layer());
+    //println!("Part A: {}", stacks.top_layer());
 
     stacks = day05::Stacks::build(&strings[0]);
-    println!("{}", stacks.top_layer());
+    //println!("{}", stacks.top_layer());
     stacks.execute_9001(&cmds);
-    println!("{}", stacks.top_layer());
+    //println!("Part B: {}", stacks.top_layer());
 
 }
 

@@ -7,9 +7,9 @@ pub fn main() {
     let elfs = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let elf_list = day01::create_elf_list(&elfs);
     let melf = day01::max_elf(&elf_list, 1);
-    println!("maximum: {}", melf);
+    //println!("Part A: {}", melf);
     let m3elf = day01::max_elf(&elf_list, 3);
-    println!("3 maximum: {}", m3elf);
+    //println!("Part B: {}", m3elf);
 }
 
 #[cfg(test)]

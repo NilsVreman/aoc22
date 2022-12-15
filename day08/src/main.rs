@@ -6,8 +6,8 @@ const FILENAME: &str = "day08";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let forest = day08::Forest::new(&c);
-    println!("Part a: {}", forest.nbr_visible());
-    //println!("Part b: {}", forest.best_view_from_tree());
+    //println!("Part A: {}", forest.nbr_visible());
+    //println!("Part B: {}", forest.best_view_from_tree());
 }
 
 #[cfg(test)]

@@ -10,13 +10,13 @@ pub fn main() {
         .lines()
         .map(|x| day02::game(&ps.parse(x).expect("Invalid parsing")))
         .sum();
-    println!("Res exc 1: {}", res);
+    //println!("Part A: {}", res);
 
     let res: u32 = c.content
         .lines()
         .map(|x| day02::game_from_answer(&ps.parse(x).expect("Invalid parsing")))
         .sum();
-    println!("Res exc 2: {}", res);
+    //println!("Part B: {}", res);
 }
 
 #[cfg(test)]
