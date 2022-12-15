@@ -97,7 +97,7 @@ mod tests {
     #[test]
     fn content1_test() {
         let file_name = "test.txt";
-        let c = Content::read_file(&file_name).unwrap_or( Content{ content: "".to_string() } );
+        let c = Content::read_file(".", &file_name).unwrap_or( Content{ content: "".to_string() } );
         let res = "here we go again
 with a bunch of lines
 and some data

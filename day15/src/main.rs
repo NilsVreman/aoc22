@@ -6,10 +6,10 @@ const FILENAME: &str = "day15";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let list = day15::new_list(&c);
-    let resA = day15::cant_contain_beacon(&list, 2000000);
-    //println!("Part A: {}", resA);
-    let resB = day15::can_contain_beacon(&list, 4000000);
-    //println!("Part B: {}", resB);
+    let res_a = day15::cant_contain_beacon(&list, 2000000);
+    println!("Part A: {}", res_a);
+    let res_b = day15::can_contain_beacon(&list, 4000000);
+    println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]
@@ -34,7 +34,7 @@ Sensor at x=16, y=7: closest beacon is at x=15, y=3
 Sensor at x=14, y=3: closest beacon is at x=15, y=3
 Sensor at x=20, y=1: closest beacon is at x=15, y=3");
         let list = day15::new_list(&c);
-        assert_eq!(day15::cant_contain_beacon(&list, 25), 26)
+        assert_eq!(day15::cant_contain_beacon(&list, 10), 26)
     }
 
     #[test]

@@ -57,7 +57,7 @@ pub fn cant_contain_beacon(list: &Vec<Sensor>, row: isize) -> isize {
         }
     });
     res = merge_intervals(&mut res);
-    res.iter().map(|x| x[1]-x[0]+1).sum::<isize>()
+    res.iter().map(|x| x[1]-x[0]).sum::<isize>()
 }
 
 pub fn can_contain_beacon(list: &Vec<Sensor>, size: isize) -> usize {
@@ -70,7 +70,7 @@ pub fn can_contain_beacon(list: &Vec<Sensor>, size: isize) -> usize {
                                 // other sensors range
                     list.iter()
                         .all(|s| !s.is_inside(p, (0, size)))
-                        .then(|| p.0 * size + p.1 )
+                        .then(|| p.0 * 4000000 + p.1 )
                 })
         }).unwrap() as usize
 }
