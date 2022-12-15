@@ -6,11 +6,12 @@ const FILENAME: &str = "day14";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let mut w = day14::Wall::new(&c);
-    while w.flow_sand() {}
+    let lowest = w.lowest;
+    w.flow_sand();
     println!("Part A: {}", w.paths.values().filter(|&x| *x == day14::Tile::Sand).count());
 
     let mut w = day14::Wall::new(&c);
-    while w.flow_sand_with_floor() {}
+    w.flow_sand_with_floor();
     println!("Part B: {}", w.paths.values().filter(|&x| *x == day14::Tile::Sand).count());
 }
 
