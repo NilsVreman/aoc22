@@ -10,21 +10,21 @@ pub fn create_list(c: &parser::Content) -> Vec<isize> {
 
 pub fn execute(list: &Vec<isize>, idxs: &Vec<usize>, num_mix: usize, key: isize) -> isize {
     // Enumerate the list to avoid duplicate numbers in list
-    let list  = list.iter().enumerate().collect::<Vec<(usize, &isize)>>();
-    let mut v = list.clone();
     let len   = list.len() as isize;
+    let mut v = (0..list.len()).collect::<Vec<_>>();
 
     for _ in 0..num_mix {
-        list.iter().for_each(|x| {
-            let p   = v.iter().position(|y| y == x).unwrap();
-            let np  = wrap_idx(p as isize, v[p].1*key, len-1) as usize;
-            let ele = v.remove(p);
-            v.insert(np, ele);
+        list.iter().enumerate().for_each(|(i, &x)| {
+            let p   = v.iter().position(|&y| y == i).unwrap();
+            v.remove(p);
+            let np  = wrap_idx(p as isize, x*key, len-1) as usize;
+            v.insert(np, i);
         });
     }
 
-    let p = v.iter().position(|&(_, &y)| y == 0).unwrap();
+    let p = list.iter().position(|&y| y == 0).unwrap();
+    let np = v.iter().position(|&y| y == p).unwrap();
     idxs.iter()
-        .map(|&x| v[wrap_idx(p as isize, x as isize, len) as usize].1*key)
+        .map(|&x| list[v[wrap_idx(np as isize, x as isize, len) as usize]]*key)
         .sum()
 }

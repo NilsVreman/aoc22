@@ -7,7 +7,7 @@ pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let forest = day08::Forest::new(&c);
     let res_a = forest.nbr_visible();
-    let res_b = forest.best_view_from_tree();
+    let res_b = forest.best_view();
     //println!("Part A: {}", res_a);
     //println!("Part B: {}", res_b);
 }
