@@ -8,11 +8,13 @@ pub fn main() {
     let mut w = day14::Wall::new(&c);
     let lowest = w.lowest;
     w.flow_sand();
-    //println!("Part A: {}", w.paths.values().filter(|&x| *x == day14::Tile::Sand).count());
+    let res_a = w.paths.values().filter(|&x| *x == day14::Tile::Sand).count();
+    //println!("Part A: {}", res_a);
 
     let mut w = day14::Wall::new(&c);
     w.flow_sand_with_floor();
-    //println!("Part B: {}", w.paths.values().filter(|&x| *x == day14::Tile::Sand).count());
+    let res_b = w.paths.values().filter(|&x| *x == day14::Tile::Sand).count();
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]

@@ -5,8 +5,10 @@ const FILENAME: &str = "day06";
 
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
-    //println!("Part A: {}", day06::find_marker(&c));
-    //println!("Part B: {}", day06::find_msg_marker(&c));
+    let res_a = day06::find_marker(&c);
+    let res_b = day06::find_msg_marker(&c);
+    //println!("Part A: {}", res_a);
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]

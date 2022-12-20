@@ -7,10 +7,12 @@ pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let g = day16::Grid::new(&c);
     let state = day16::State::new(0, 30);
-    //println!("Part A: {}", g.max_pressure_release(&state));
+    let res_a = g.max_pressure_release(&state);
+    //println!("Part A: {}", res_a);
 
     let state = day16::ElephantState::new(0, 26);
-    //println!("Part B: {}", g.max_pressure_release_w_elephant(&state));
+    let res_b = g.max_pressure_release_w_elephant(&state);
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]

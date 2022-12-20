@@ -6,8 +6,10 @@ const FILENAME: &str = "day20";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let list = day20::create_list(&c);
-    //println!("Part A: {}", day20::execute(&list, &vec![1000, 2000, 3000], 1, 1));
-    //println!("Part B: {}", day20::execute(&list, &vec![1000, 2000, 3000], 10, 811589153));
+    let res_a = day20::execute(&list, &vec![1000, 2000, 3000], 1, 1);
+    let res_b = day20::execute(&list, &vec![1000, 2000, 3000], 10, 811589153);
+    //println!("Part A: {}", res_a);
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]
