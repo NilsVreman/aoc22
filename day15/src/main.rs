@@ -7,9 +7,9 @@ pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let list = day15::new_list(&c);
     let res_a = day15::cant_contain_beacon(&list, 2000000);
-    println!("Part A: {}", res_a);
+    //println!("Part A: {}", res_a);
     let res_b = day15::can_contain_beacon(&list, 4000000);
-    println!("Part B: {}", res_b);
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]

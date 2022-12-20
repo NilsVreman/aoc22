@@ -1,7 +1,7 @@
 use parser;
 use std::collections::HashMap;
 
-const PATH: &str = "../data";
+const PATH: &str = "data";
 const FILENAME: &str = "day19";
 
 pub fn main() {
@@ -17,7 +17,7 @@ pub fn main() {
         let g = day19::execute_bp(&bp, &s, &mut map);
         sum += g*bp.id;
     }
-    println!("Part A: {}", sum);
+    //println!("Part A: {}", sum);
 
     let s   = day19::State::new(32);
     sum     = 1;
@@ -27,7 +27,7 @@ pub fn main() {
         let g = day19::execute_bp(&bp, &s, &mut map);
         sum *= g;
     }
-    println!("Part B: {}", sum);
+    //println!("Part B: {}", sum);
 }
 
 #[cfg(test)]
