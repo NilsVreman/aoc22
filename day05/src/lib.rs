@@ -28,7 +28,7 @@ pub struct Stacks<'a> {
 impl<'a> Stacks<'a> {
     pub fn build(config: &'a str) -> Stacks<'a> {
         let n = config.lines().next().unwrap().len()/4 + 1;
-        let mut stacks: Vec<Vec<&str>> = (0..n).map(|_x| Vec::new()).collect();
+        let mut stacks: Vec<Vec<&str>> = (0..n).map(|_| Vec::new()).collect();
         let mut j = 0;
 
         for line in config.lines().rev().skip(1) {
