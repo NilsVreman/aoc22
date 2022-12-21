@@ -36,6 +36,7 @@ use parser;
 // 00011000
 // 00011000
 
+#[derive(Debug, Clone)]
 struct CyclicIndexable<'a,T> {
     vec: &'a [T],
     idx: usize,
@@ -66,41 +67,37 @@ pub enum Jet {
 
 impl Jet {
     pub fn new(c: &parser::Content) -> Vec<Self> {
-        c.content.chars().map(|x| if x == '<' { Jet::L } else { Jet::R }).collect::<Vec<_>>()
+        c.content.chars()
+            .map(|x| if x == '<' { Jet::L } else if x == '>' { Jet::R } else { panic!("It literally took me 12 hours to find this error") })
+            .collect::<Vec<_>>()
     }
 }
 
 #[derive(Clone,Copy)]
-pub struct Rock {
+struct Rock {
     r: u32,
-    w: u8,
     h: u8,
 }
 
 const ROCKS: [Rock; 5] = [
     Rock {
         r: 0x0000001E,
-        w: 4,
         h: 1,
     },
     Rock {
         r: 0x00081C08,
-        w: 3,
         h: 3,
     },
     Rock {
         r: 0x0004041C,
-        w: 3,
         h: 3,
     },
     Rock {
         r: 0x10101010,
-        w: 1,
         h: 4,
     },
     Rock {
         r: 0x00001818,
-        w: 2,
         h: 2,
     }
 ];
@@ -136,15 +133,16 @@ impl Rock {
 
 const ROW_BUF_SIZE: usize = 1_024;
 
+#[derive(Clone)]
 struct Shaft<'a> {
     shaft: [u8; ROW_BUF_SIZE],
-    height: isize,
+    height: usize,
     rocks: CyclicIndexable<'a, Rock>,
     jets: CyclicIndexable<'a, Jet>,
 }
 
 impl<'a> Shaft<'a> {
-    pub fn new(rocks: &'a [Rock], jets: &'a [Jet]) -> Self {
+    fn new(rocks: &'a [Rock], jets: &'a [Jet]) -> Self {
         Self {
             shaft: [0; ROW_BUF_SIZE],
             height: 0,
@@ -153,13 +151,12 @@ impl<'a> Shaft<'a> {
         }
     }
 
-    fn feasible(&self, rock: &Rock, row: isize) -> bool {
-        if row < 0 { return false }
+    fn feasible(&self, rock: &Rock, row: usize) -> bool {
         rock.r & self.shaft_config(row) == 0
     }
 
 
-    fn shaft_config(&self, row: isize) -> u32 {
+    fn shaft_config(&self, row: usize) -> u32 {
         let row = row as usize;
         let r3 = (row + 3) % ROW_BUF_SIZE;
         let r2 = (row + 2) % ROW_BUF_SIZE;
@@ -171,7 +168,7 @@ impl<'a> Shaft<'a> {
         (res << 8) | self.shaft[r0] as u32
     }
 
-    fn add_rock(&mut self, rock: &Rock, row: isize) -> isize {
+    fn add_rock(&mut self, rock: &Rock, row: usize) -> usize {
         let row = row as usize;
         let r3 = (row + 3) % ROW_BUF_SIZE;
         let r2 = (row + 2) % ROW_BUF_SIZE;
@@ -182,10 +179,10 @@ impl<'a> Shaft<'a> {
         self.shaft[r2] |= r[2];
         self.shaft[r1] |= r[1];
         self.shaft[r0] |= r[0];
-        row as isize + rock.h as isize
+        row as usize + rock.h as usize
     }
 
-    fn clear_4_rows(&mut self, row: isize) {
+    fn clear_4_rows(&mut self, row: usize) {
         let row = row as usize;
         let r3 = (row + 3) % ROW_BUF_SIZE;
         let r2 = (row + 2) % ROW_BUF_SIZE;
@@ -198,7 +195,7 @@ impl<'a> Shaft<'a> {
         self.shaft[r0] = 0;
     }
 
-    fn drop_rock(&mut self) -> isize {
+    fn drop_rock(&mut self) -> usize {
         let mut row  = self.height + 3;
         let mut rock = self.rocks.next().unwrap();
 
@@ -221,12 +218,11 @@ impl<'a> Shaft<'a> {
         return row
     }
 
+    #[allow(dead_code)]
     fn print(&self, start_row: usize, end_row: usize) {
         for row in (start_row..=end_row).rev() {
             for col in (0..7).rev() {
-                let r = row as usize % ROW_BUF_SIZE;
-                let row_mask = 1 << col;
-                let pixel = if self.shaft[r] & row_mask == 0 {
+                let pixel = if self.shaft[row] & (1 << col) == 0 {
                     "."
                 } else {
                     "#"
@@ -238,58 +234,64 @@ impl<'a> Shaft<'a> {
     }
 }
 
-pub fn simulate(jets: &Vec<Jet>, n_rocks: usize) -> isize {
-    let mut shaft = Shaft::new(&ROCKS, &jets);
-    let mut jet_idx = 0;
-    for _ in 0..n_rocks {
+pub fn simulate(jets: &Vec<Jet>, n_rocks: isize) -> usize {
+    let mut shaft = Shaft::new(&ROCKS, jets);
+
+    // Check how many rocks we've passed through for the specific [rock_idx][jet_idx] configuration 
+    let mut jet_rock_after = vec![vec![isize::MIN; jets.len()]; ROCKS.len()];
+
+    // For each rock
+    for n in 0..n_rocks {
+        let rock_idx = shaft.rocks.idx;
+        let jet_idx = shaft.jets.idx;
+
+        // If this configuration hasn't been tried
+        if jet_rock_after[rock_idx][jet_idx] < 0 {
+
+            // Set the value to the number of rocks we've dropped
+            jet_rock_after[rock_idx][jet_idx] = n;
+
+        // If it has been iterated
+        } else {
+
+            // create a new shaft and iterate that many rocks
+            let mut shaft_new = Shaft::new(&ROCKS, jets);
+            let n_new         = jet_rock_after[rock_idx][jet_idx];
+            for _ in 0..n_new {
+                shaft_new.drop_rock();
+            }
+
+            // check the difference in height between the two shafts and also how many more rocks
+            // we've iterated in one compared to the other
+            let height_diff = shaft.height - shaft_new.height;
+            let n_diff      = n - n_new;
+
+            // Make sure that they are equivalent for each stone we drop in both of them (if they
+            // are we've found a repeating pattern)
+            let mut equal = true;
+            let mut shaft_copy = shaft.clone(); // clone so we don't iterate this shaft again
+            for _ in 0..n_diff {
+                if shaft_copy.drop_rock() != shaft_new.drop_rock() + height_diff {
+                    equal = false;
+                }
+            }
+
+            // if they are equal, we are done
+            if equal {
+                // Calculated how many more rocks I need to iterate in this period
+                let n_rem = (n_rocks - n_new) % n_diff;
+                // Calculate how many more periods we have
+                let n_per = (n_rocks - n_new) / n_diff;
+                for _ in 0..n_rem {
+                    shaft.drop_rock();
+                }
+                return shaft.height + height_diff*(n_per as usize - 1);
+            } 
+        }
+
+        // drop another rock
         shaft.drop_rock();
     }
-    shaft.height
-}
 
-//pub fn simulate_periodic(jets: &Vec<Jet>, n_rocks: usize) -> usize {
-//    let mut shaft = Shaft::new();
-//    let mut jet_idx = 0;
-//    let mut ele_idx = 0;
-//
-//    let mut shape_move_seen_after = vec![vec![-1i64; jets.len()]; 5];
-//
-//    for simulated_rocks in 0..n_rocks {
-//        if shape_move_seen_after[ele_idx][jet_idx] < 0 {
-//            shape_move_seen_after[ele_idx][jet_idx] = simulated_rocks;
-//        } else {
-//            let mut ref_shaft = Shaft::new();
-//            let n_rocks_transient = shape_move_seen_after[ele_idx][jet_idx];
-//            for n in 0..n_rocks_transient {
-//                (_, jet_idx) = ref_shaft.drop_rock(jets, ele_idx, jet_idx);
-//                ele_idx = n;
-//            }
-//            let height_period = shaft.height - ref_shaft.height;
-//            let n_rocks_period = simulated_rocks - n_rocks_transient;
-//
-//            let mut equal = true;
-//            for n in 0..n_rocks_period {
-//                let (row,col) = chamber.simulate_next_rock();
-//                let (row_ref,col_ref) = ref_chamber.simulate_next_rock();
-//
-//                if !(row == row_ref + height_period && col == col_ref) {
-//                    equal = false;
-//                }
-//            }
-//
-//            chamber = ref_chamber;
-//
-//            if equal {
-//                let remainder = (n_rocks - n_rocks_transient) % n_rocks_period;
-//                let n_periods = (n_rocks - n_rocks_transient) / n_rocks_period;
-//                for _ in 0..remainder {
-//                    chamber.simulate_next_rock();
-//                }
-//                return chamber.height + height_period*(n_periods - 1)
-//            }
-//        }
-//
-//        chamber.simulate_next_rock();
-//    }
-//    return chamber.height;
-//}
+    return shaft.height
+}
