@@ -1,9 +1,64 @@
 use parser;
 
-const WIDTH: usize = 7;
-const NUM_ELE: usize = 2022;
-const HEIGHT: usize = 4*NUM_ELE+10;
+// Wall:
+// 10000000(1)
+// 10000000(1)
+// 10000000(1)
+// 10000000(1)
+//
+// Horizontal Line:
+// 00000000
+// 00000000
+// 00000000
+// 00011110
+//
+// Cross:
+// 00000000
+// 00001000
+// 00011100
+// 00001000
+//
+// L:
+// 00000000
+// 00000100
+// 00000100
+// 00011100
+//
+// Vertical Line:
+// 00010000
+// 00010000
+// 00010000
+// 00010000
+//
+// Cube:
+// 00000000
+// 00000000
+// 00011000
+// 00011000
 
+struct CyclicIndexable<'a,T> {
+    vec: &'a [T],
+    idx: usize,
+    len: usize,
+}
+
+impl<'a,T> CyclicIndexable<'a,T> {
+    fn new(vec: &'a [T]) -> Self {
+        CyclicIndexable{vec, idx: 0, len: vec.len()}
+    }
+}
+
+impl<'a,T> Iterator for CyclicIndexable<'a,T> where T: Copy {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let el = self.vec[self.idx];
+        self.idx = (self.idx + 1) % self.len;
+        return Some(el);
+    }
+}
+
+#[derive(Clone,Copy)]
 pub enum Jet {
     L,
     R,
@@ -11,175 +66,230 @@ pub enum Jet {
 
 impl Jet {
     pub fn new(c: &parser::Content) -> Vec<Self> {
-        c.content.chars().map(|x| if x == '<' { Jet::L } else { Jet::R }).collect::<Vec<Jet>>()
+        c.content.chars().map(|x| if x == '<' { Jet::L } else { Jet::R }).collect::<Vec<_>>()
     }
 }
 
-enum Rock {
-    HLine,
-    Cross,
-    L,
-    VLine,
-    Square,
+#[derive(Clone,Copy)]
+pub struct Rock {
+    r: u32,
+    w: u8,
+    h: u8,
 }
+
+const ROCKS: [Rock; 5] = [
+    Rock {
+        r: 0x0000001E,
+        w: 4,
+        h: 1,
+    },
+    Rock {
+        r: 0x00081C08,
+        w: 3,
+        h: 3,
+    },
+    Rock {
+        r: 0x0004041C,
+        w: 3,
+        h: 3,
+    },
+    Rock {
+        r: 0x10101010,
+        w: 1,
+        h: 4,
+    },
+    Rock {
+        r: 0x00001818,
+        w: 2,
+        h: 2,
+    }
+];
 
 impl Rock {
-    fn get_shape(ele: usize) -> Rock {
-        match ele % 5 {
-            0 => Rock::HLine,
-            1 => Rock::Cross,
-            2 => Rock::L,
-            3 => Rock::VLine,
-            4 => Rock::Square,
-            _ => panic!("Not sure why this is needed"),
-        }
-    }
-
-    pub fn get_height(&self) -> usize {
-        match self {
-            Rock::HLine => 1,
-            Rock::Cross => 3,
-            Rock::L => 3,
-            Rock::VLine => 4,
-            Rock::Square => 2,
-        }
-    }
-}
-
-pub struct Shaft {
-    pub shaft: [[bool; WIDTH]; HEIGHT],
-    pub top: usize,
-}
-
-impl Shaft {
-    pub fn new() -> Self {
-        Self { shaft: [[false; WIDTH]; HEIGHT], top: 0 }
-    }
-
-    fn feasible(&self, shape: &Rock, x: &usize, y: &usize) -> bool {
-        match shape {
-            Rock::HLine => {
-                *x <= 3
-                    && !self.shaft[*y][*x]
-                    && !self.shaft[*y][*x+1]
-                    && !self.shaft[*y][*x+2]
-                    && !self.shaft[*y][*x+3]
-            },
-            Rock::Cross => {
-                *x <= 4
-                    && !self.shaft[*y+1][*x]
-                    && !self.shaft[*y+1][*x+1]
-                    && !self.shaft[*y+1][*x+2]
-                    && !self.shaft[*y][*x+1]
-                    && !self.shaft[*y+2][*x+1]
-            },
-            Rock::L => {
-                *x <= 4
-                    && !self.shaft[*y][*x]
-                    && !self.shaft[*y][*x+1]
-                    && !self.shaft[*y][*x+2]
-                    && !self.shaft[*y+1][*x+2]
-                    && !self.shaft[*y+2][*x+2]
-            },
-            Rock::VLine => {
-                *x <= 6
-                    && !self.shaft[*y][*x]
-                    && !self.shaft[*y+1][*x]
-                    && !self.shaft[*y+2][*x]
-                    && !self.shaft[*y+3][*x]
-            },
-            Rock::Square => {
-                *x <= 5
-                    && !self.shaft[*y][*x]
-                    && !self.shaft[*y+1][*x]
-                    && !self.shaft[*y][*x+1]
-                    && !self.shaft[*y+1][*x+1]
-            },
-        }
-    }
-
-    fn feasible_shift(&self, shape: &Rock, j: &Jet, x: &usize, y: &usize) -> bool {
-        match j {
-            Jet::L => *x >= 1 && self.feasible(&shape, &(x-1), y),
-            Jet::R => *x <= 6 && self.feasible(&shape, &(x+1), y),
-        }
-    }
-
-    fn set(&mut self, shape: &Rock, x: &usize, y: &usize) {
-        match shape {
-            Rock::HLine => {
-                self.shaft[*y][*x]      = true;
-                self.shaft[*y][*x+1]    = true;
-                self.shaft[*y][*x+2]    = true;
-                self.shaft[*y][*x+3]    = true;
-            },
-            Rock::Cross => {
-                self.shaft[*y+1][*x]    = true;
-                self.shaft[*y+1][*x+1]  = true;
-                self.shaft[*y+1][*x+2]  = true;
-                self.shaft[*y][*x+1]    = true;
-                self.shaft[*y+2][*x+1]  = true;
-            },
-            Rock::L => {
-                self.shaft[*y][*x]      = true;
-                self.shaft[*y][*x+1]    = true;
-                self.shaft[*y][*x+2]    = true;
-                self.shaft[*y+1][*x+2]  = true;
-                self.shaft[*y+2][*x+2]  = true;
-            },
-            Rock::VLine => {
-                self.shaft[*y][*x]      = true;
-                self.shaft[*y+1][*x]    = true;
-                self.shaft[*y+2][*x]    = true;
-                self.shaft[*y+3][*x]    = true;
-            },
-            Rock::Square => {
-                self.shaft[*y][*x]      = true;
-                self.shaft[*y+1][*x]    = true;
-                self.shaft[*y][*x+1]    = true;
-                self.shaft[*y+1][*x+1]  = true;
-            },
-        }
-    }
-
-    fn shift_and_drop(&mut self, shape: &Rock, j: &Jet, x: &usize, y: &usize) -> (usize, usize) {
-        let (mut res_x, mut res_y) = (*x as isize, *y as isize);
-        if self.feasible_shift(&shape, &j, x, y) {
-            res_x = res_x + match j {
-                Jet::L => -1,
-                Jet::R => 1,
-            };
-        }
-
-        if res_y == 0 || !self.feasible(&shape, &(res_x as usize), &((res_y-1) as usize)) {
-            self.set(shape, &(res_x as usize), &(res_y as usize));
-            self.top = &(res_y as usize) + shape.get_height();
-        } else {
-            res_y -= 1;
-        }
-        return (res_x as usize, res_y as usize)
-    }
-
-    pub fn iterate(&mut self, jets: &Vec<Jet>) -> usize {
-        let mut idx = 0;
-        for ele in 0..NUM_ELE {
-            let shape = Rock::get_shape(ele);
-            let (mut x, mut y) = (2, self.top + 3);
-            loop {
-                let j = &jets[idx];
-                idx += 1;
-                if idx >= jets.len() {
-                    idx = 0;
-                }
-                let (xn, yn) = self.shift_and_drop(&shape, &j, &x, &y);
-                x = xn;
-                if y != yn {
-                    y = yn;
+    fn shift(&mut self, j: &Jet, shaft_config: u32) {
+        let np = match j {
+            Jet::L => {
+                if self.r & 0x40404040 == 0 { // block before left wall
+                    self.r << 1
                 } else {
-                    break
+                    return
+                }
+            },
+            Jet::R => {
+                if self.r & 0x01010101 == 0 { // block before right wall
+                    self.r >> 1
+                } else {
+                    return
                 }
             }
+        };
+
+        if np & shaft_config == 0 {
+            self.r = np;
         }
-        self.top + 3
+    }
+
+    fn as_bytes(&self) -> [u8; 4] {
+        self.r.to_le_bytes()
     }
 }
+
+const ROW_BUF_SIZE: usize = 1_024;
+
+struct Shaft<'a> {
+    shaft: [u8; ROW_BUF_SIZE],
+    height: isize,
+    rocks: CyclicIndexable<'a, Rock>,
+    jets: CyclicIndexable<'a, Jet>,
+}
+
+impl<'a> Shaft<'a> {
+    pub fn new(rocks: &'a [Rock], jets: &'a [Jet]) -> Self {
+        Self {
+            shaft: [0; ROW_BUF_SIZE],
+            height: 0,
+            rocks: CyclicIndexable::new(rocks),
+            jets: CyclicIndexable::new(jets)
+        }
+    }
+
+    fn feasible(&self, rock: &Rock, row: isize) -> bool {
+        if row < 0 { return false }
+        rock.r & self.shaft_config(row) == 0
+    }
+
+
+    fn shaft_config(&self, row: isize) -> u32 {
+        let row = row as usize;
+        let r3 = (row + 3) % ROW_BUF_SIZE;
+        let r2 = (row + 2) % ROW_BUF_SIZE;
+        let r1 = (row + 1) % ROW_BUF_SIZE;
+        let r0 = (row + 0) % ROW_BUF_SIZE;
+        let mut res: u32 = self.shaft[r3] as u32;
+        res = (res << 8) | self.shaft[r2] as u32;
+        res = (res << 8) | self.shaft[r1] as u32;
+        (res << 8) | self.shaft[r0] as u32
+    }
+
+    fn add_rock(&mut self, rock: &Rock, row: isize) -> isize {
+        let row = row as usize;
+        let r3 = (row + 3) % ROW_BUF_SIZE;
+        let r2 = (row + 2) % ROW_BUF_SIZE;
+        let r1 = (row + 1) % ROW_BUF_SIZE;
+        let r0 = (row + 0) % ROW_BUF_SIZE;
+        let r  = rock.as_bytes();
+        self.shaft[r3] |= r[3];
+        self.shaft[r2] |= r[2];
+        self.shaft[r1] |= r[1];
+        self.shaft[r0] |= r[0];
+        row as isize + rock.h as isize
+    }
+
+    fn clear_4_rows(&mut self, row: isize) {
+        let row = row as usize;
+        let r3 = (row + 3) % ROW_BUF_SIZE;
+        let r2 = (row + 2) % ROW_BUF_SIZE;
+        let r1 = (row + 1) % ROW_BUF_SIZE;
+        let r0 = (row + 0) % ROW_BUF_SIZE;
+
+        self.shaft[r3] = 0;
+        self.shaft[r2] = 0;
+        self.shaft[r1] = 0;
+        self.shaft[r0] = 0;
+    }
+
+    fn drop_rock(&mut self) -> isize {
+        let mut row  = self.height + 3;
+        let mut rock = self.rocks.next().unwrap();
+
+        self.clear_4_rows(row);
+
+        loop {
+            let jet = self.jets.next().unwrap();
+
+            rock.shift(&jet, self.shaft_config(row));
+
+            if row > 0 && self.feasible(&rock, row-1) {
+                row -= 1;
+            } else {
+                let top_row_added = self.add_rock(&rock, row);
+                self.height = self.height.max(top_row_added);
+                break;
+            }
+        }
+
+        return row
+    }
+
+    fn print(&self, start_row: usize, end_row: usize) {
+        for row in (start_row..=end_row).rev() {
+            for col in (0..7).rev() {
+                let r = row as usize % ROW_BUF_SIZE;
+                let row_mask = 1 << col;
+                let pixel = if self.shaft[r] & row_mask == 0 {
+                    "."
+                } else {
+                    "#"
+                };
+                print!("{}", pixel);
+            }
+            println!();
+        }
+    }
+}
+
+pub fn simulate(jets: &Vec<Jet>, n_rocks: usize) -> isize {
+    let mut shaft = Shaft::new(&ROCKS, &jets);
+    let mut jet_idx = 0;
+    for _ in 0..n_rocks {
+        shaft.drop_rock();
+    }
+    shaft.height
+}
+
+//pub fn simulate_periodic(jets: &Vec<Jet>, n_rocks: usize) -> usize {
+//    let mut shaft = Shaft::new();
+//    let mut jet_idx = 0;
+//    let mut ele_idx = 0;
+//
+//    let mut shape_move_seen_after = vec![vec![-1i64; jets.len()]; 5];
+//
+//    for simulated_rocks in 0..n_rocks {
+//        if shape_move_seen_after[ele_idx][jet_idx] < 0 {
+//            shape_move_seen_after[ele_idx][jet_idx] = simulated_rocks;
+//        } else {
+//            let mut ref_shaft = Shaft::new();
+//            let n_rocks_transient = shape_move_seen_after[ele_idx][jet_idx];
+//            for n in 0..n_rocks_transient {
+//                (_, jet_idx) = ref_shaft.drop_rock(jets, ele_idx, jet_idx);
+//                ele_idx = n;
+//            }
+//            let height_period = shaft.height - ref_shaft.height;
+//            let n_rocks_period = simulated_rocks - n_rocks_transient;
+//
+//            let mut equal = true;
+//            for n in 0..n_rocks_period {
+//                let (row,col) = chamber.simulate_next_rock();
+//                let (row_ref,col_ref) = ref_chamber.simulate_next_rock();
+//
+//                if !(row == row_ref + height_period && col == col_ref) {
+//                    equal = false;
+//                }
+//            }
+//
+//            chamber = ref_chamber;
+//
+//            if equal {
+//                let remainder = (n_rocks - n_rocks_transient) % n_rocks_period;
+//                let n_periods = (n_rocks - n_rocks_transient) / n_rocks_period;
+//                for _ in 0..remainder {
+//                    chamber.simulate_next_rock();
+//                }
+//                return chamber.height + height_period*(n_periods - 1)
+//            }
+//        }
+//
+//        chamber.simulate_next_rock();
+//    }
+//    return chamber.height;
+//}
