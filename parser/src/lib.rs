@@ -52,12 +52,12 @@ pub struct Content {
 impl Content {
     pub fn read_file(path: &str, file_name: &str) -> Result<Content, io::Error> {
         match fs::read_to_string(format!("{path}/{file_name}.txt")) {
-            Ok(s) => Ok( Content { content: s.trim_end().to_string() } ),
+            Ok(s) => Ok( Content { content: s.to_string() } ),
             Err(e) => Err(e),
         }
     }
 
     pub fn read(content: &str) -> Content {
-        Content { content: content.trim_end().to_string() }
+        Content { content: content.to_string() }
     }
 }

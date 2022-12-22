@@ -67,7 +67,8 @@ pub enum Jet {
 
 impl Jet {
     pub fn new(c: &parser::Content) -> Vec<Self> {
-        c.content.chars()
+        c.content.trim_end()
+            .chars()
             .map(|x| if x == '<' { Jet::L } else if x == '>' { Jet::R } else { panic!("It literally took me 12 hours to find this error") })
             .collect::<Vec<_>>()
     }
