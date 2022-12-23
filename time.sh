@@ -7,7 +7,7 @@ ALL_DAYS=$(ls target/release | grep day[0-9].\$)
 
 echo "Running individual"
 for d in $ALL_DAYS ; do
-    if [ $d != "day16" ]
+    if [[ $d != "day16" ]] && [[ $d != "day19" ]]
     then
         start_time="$(date -u +%s.%N)"
         ./target/release/$d >> /dev/null
@@ -20,7 +20,7 @@ done
 echo "Running all"
 start_time="$(date -u +%s.%N)"
 for d in $ALL_DAYS ; do
-    if [ $d != "day16" ]
+    if [[ $d != "day16" ]] && [[ $d != "day19" ]]
     then
         ./target/release/$d >> /dev/null
     fi
