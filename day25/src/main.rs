@@ -1,6 +1,6 @@
 use parser;
 
-const PATH: &str = "../data";
+const PATH: &str = "data";
 const FILENAME: &str = "day25";
 
 
@@ -9,7 +9,7 @@ pub fn main() {
     let res_a = day25::Snafu::sum(&cont.content.lines()
                                   .map(|x| day25::Snafu::new(x))
                                   .collect::<Vec<_>>());
-    println!("Part A: {}", res_a.to_string());
+    //println!("Part A: {}", res_a.to_string());
 }
 
 #[cfg(test)]

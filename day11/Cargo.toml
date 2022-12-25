@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 parser = { path = "../parser" }
+num = "0.4.0"
