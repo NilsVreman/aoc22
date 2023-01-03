@@ -6,10 +6,10 @@ const FILENAME: &str = "day04";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let res = day04::pairs_vec(&c);
-    let fco: u32 = res.iter().map(|x| if x.fully_contains_other() { 1 } else { 0 }).sum();
-    //println!("Part A: {}", fco);
-    let co: u32 = res.iter().map(|x| if x.contains_other() { 1 } else { 0 }).sum();
-    //println!("Part B: {}", co);
+    let res_a: u32 = res.iter().map(|x| if x.fully_contains_other() { 1 } else { 0 }).sum();
+    //println!("Part A: {}", res_a);
+    let res_b: u32 = res.iter().map(|x| if x.contains_other() { 1 } else { 0 }).sum();
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]

@@ -6,16 +6,16 @@ const FILENAME: &str = "day03";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let r = day03::rucksacks(&c);
-    let res = r.iter()
+    let res_a = r.iter()
         .map(|x| x.find_common())
         .sum::<u32>();
-    //println!("Part A: {}", res);
+    //println!("Part A: {}", res_a);
 
-    let mut res2: u32 = 0;
+    let mut res_b: u32 = 0;
     for i in (0..r.len()-2).step_by(3) {
-        res2 += day03::find_common_group(&r[i..i+3]);
+        res_b += day03::find_common_group(&r[i..i+3]);
     }
-    //println!("Part B: {}", res2);
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]

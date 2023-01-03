@@ -6,10 +6,10 @@ const FILENAME: &str = "day01";
 pub fn main() {
     let elfs = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let elf_list = day01::create_elf_list(&elfs);
-    let melf = day01::max_elf(&elf_list, 1);
-    //println!("Part A: {}", melf);
-    let m3elf = day01::max_elf(&elf_list, 3);
-    //println!("Part B: {}", m3elf);
+    let res_a = day01::max_elf(&elf_list, 1);
+    //println!("Part A: {}", res_a);
+    let res_b = day01::max_elf(&elf_list, 3);
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]

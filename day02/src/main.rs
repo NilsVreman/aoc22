@@ -6,17 +6,17 @@ const FILENAME: &str = "day02";
 pub fn main() {
     let c = parser::Content::read_file(PATH, FILENAME).expect("No input file found!");
     let ps = parser::Parser::build("{} {}", "{}");
-    let res: u32 = c.content
+    let res_a: u32 = c.content
         .lines()
         .map(|x| day02::game(&ps.parse(x).expect("Invalid parsing")))
         .sum();
-    //println!("Part A: {}", res);
+    //println!("Part A: {}", res_a);
 
-    let res: u32 = c.content
+    let res_b: u32 = c.content
         .lines()
         .map(|x| day02::game_from_answer(&ps.parse(x).expect("Invalid parsing")))
         .sum();
-    //println!("Part B: {}", res);
+    //println!("Part B: {}", res_b);
 }
 
 #[cfg(test)]
