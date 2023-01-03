@@ -87,8 +87,7 @@ impl Monkey {
 
 pub fn rounds<T>(mut monkeys: Vec<Monkey>,
                  n_rounds: usize,
-                 worry_reduction: T)
--> usize 
+                 worry_reduction: T) -> usize 
 where
     T: Fn(usize) -> usize,
 {

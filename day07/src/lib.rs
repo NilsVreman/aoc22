@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+/// I know that this solution is currently memory-unsafe. Haven't remade it though.
 pub struct Dir {
     files: Vec<File>,
     children: Vec<Rc<RefCell<Dir>>>,

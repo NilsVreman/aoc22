@@ -1,4 +1,4 @@
-use parser;
+uqse parser;
 use queues::*;
 
 pub struct Grid {

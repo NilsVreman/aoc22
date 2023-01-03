@@ -99,22 +99,6 @@ impl Wall {
         }
     }
 
-
-    //pub fn flow_sand_with_floor(&mut self) -> bool {
-    //    let mut sand = Point { x: 500, y: 0 };
-    //    let ground = self.lowest + 2;
-    //    while !self.paths.contains_key(&sand) {
-    //        if sand.y + 1 == ground { // If reached lowest
-    //            self.paths.insert(sand, Tile::Sand);
-    //            return true
-    //        } 
-    //        if self.apply_rules(&mut sand) {
-    //            return true
-    //        }
-    //    }
-    //    false
-    //}
-
     pub fn flow_sand(&mut self) {
         let mut prev_path = vec![ Point { x: 500, y: 0 } ];
         let mut sand: Point<isize>;
