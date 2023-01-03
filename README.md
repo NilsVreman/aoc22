@@ -12,8 +12,34 @@ sh time.sh
 
 #### Approximate timings
 
-| Exercise | Time (ms) |
-| -------- | --------- |
+| Exercise | Time (s) |
+| -------- | -------- |
+| Day01    | .00179   |
+| Day02    | .00211   |
+| Day03    | .00183   |
+| Day04    | .00246   |
+| Day05    | .00193   |
+| Day06    | .00321   |
+| Day07    | .00178   |
+| Day08    | .00461   |
+| Day09    | .00387   |
+| Day10    | .00208   |
+| Day11    | .01237   |
+| Day12    | .00308   |
+| Day13    | .00305   |
+| Day14    | .00948   |
+| Day15    | .07506   |
+| Day16    | Insert   |
+| Day17    | .00316   |
+| Day18    | .01101   |
+| Day19    | Insert   |
+| Day20    | .10719   |
+| Day21    | .00241   |
+| Day22    | .00210   |
+| Day23    | .97738   |
+| Day24    | .00185   |
+| Day25    | .00159   |
+
 
 ## Inspiration
 The exercises have all been solved by me but for some of them inspiration from other programmers have been taking in order to either optimise the solution, or help solve it completely.
