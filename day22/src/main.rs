@@ -1,6 +1,6 @@
 use parser;
 
-const PATH: &str = "data";
+const PATH: &str = "../data";
 const FILENAME: &str = "day22";
 
 pub fn main() {

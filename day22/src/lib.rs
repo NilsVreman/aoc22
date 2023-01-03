@@ -80,10 +80,7 @@ impl Map {
         let mut edges:   HashSet<(isize, isize)> = HashSet::new();
 
         let parts = cont.content.split("\n\n").collect::<Vec<_>>();
-        let mut max_col: isize = 0;
-        parts[0].lines().for_each(|l| {
-            if l.len() as isize > max_col { max_col = l.len() as isize; }
-        });
+        let mut max_col: isize = parts[0].lines().map(|l| l.len() as isize).max().unwrap();
 
         let mut row: isize = 0;
         let mut col: isize = 0;
